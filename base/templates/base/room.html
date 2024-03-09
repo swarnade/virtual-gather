@@ -1,0 +1,54 @@
+{% extends 'base/main.html' %}
+{% load static %}
+{% block content %}
+
+<main>
+
+    <div id="main-video">
+        <div id="video-div">
+            <section id="video-streams"></section>
+        </div>
+        <div id="participants">
+            <h2 class="participants-heading">Participants</h2>
+            <div id="class-participants">
+            </div>
+        </div>
+    </div>
+
+
+
+    </section>
+
+    <section id="room-name-wrapper">
+        <p id="room-id"><span id="room-name" ></span> &nbsp|&nbsp <p1><span id="time" ></span></p1></p>
+
+        
+        <section id="controls-wrapper">
+            <div class="icon-wrapper">
+                <img class="control-icon" id="mic-btn" src="{% static 'images/microphone.png' %}" />
+            </div>
+
+            <div class="icon-wrapper">
+                <img class="control-icon" id="camera-btn" src="{% static 'images/video.svg' %}" />
+            </div>
+
+            <div class="icon-wrapper">
+                <img class="control-icon" id="toggleButton" src="{% static 'images/participants.png' %}" />
+            </div>
+
+            <div class="icon-wrapper">
+                <img class="control-icon" id="leave-btn" src="{% static 'images/leave.png' %}" />
+            </div>
+        </section>
+        <p id="div-2">Total Participants:-<span id="participants-num"></span>&nbsp|&nbsp<span id="duration"></span></p>
+    </section>
+
+
+</main>
+
+
+<script type="text/javascript" src="{% static 'assets/AgoraRTC_N-4.8.0.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/streams.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/time.js' %}"></script>
+
+{% endblock content %}
