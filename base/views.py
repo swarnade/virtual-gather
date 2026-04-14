@@ -19,8 +19,8 @@ def room(request):
 
 
 def getToken(request):
-    appId = "3de4c9c5c9d743d19d98a4f2f5a5ecde"
-    appCertificate = "b50bf18a641c4dda9e9687067a027553"
+    appId = "dc964f69ac464374ba0baaf9b084f95a"
+    appCertificate = "46e3251bceab4fb3ab515c821ab78da1"
     channelName = request.GET.get('channel')
     uid = random.randint(1, 230)
     expirationTimeInSeconds = 3600
@@ -49,20 +49,20 @@ def getMember(request):
     uid = request.GET.get('UID')
     room_name = request.GET.get('room_name')
 
-    member = RoomMember.objects.get(
+    member = RoomMember.objects.filter(
         uid=uid,
         room_name=room_name,
-    )
-    name = member.name
-    return JsonResponse({'name':member.name}, safe=False)
+    ).first()
+
+    name = member.name if member else 'Guest'
+    return JsonResponse({'name': name}, safe=False)
 
 @csrf_exempt
 def deleteMember(request):
     data = json.loads(request.body)
-    member = RoomMember.objects.get(
+    RoomMember.objects.filter(
         name=data['name'],
         uid=data['UID'],
         room_name=data['room_name']
-    )
-    member.delete()
-    return JsonResponse('Member deleted', safe=False)
+    ).delete()
+    return JsonResponse({'message': 'Member deleted'}, safe=False)

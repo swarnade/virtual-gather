@@ -1,4 +1,4 @@
-const APP_ID = '3de4c9c5c9d743d19d98a4f2f5a5ecde'
+const APP_ID = 'dc964f69ac464374ba0baaf9b084f95a'
 const TOKEN = sessionStorage.getItem('token')
 const CHANNEL = sessionStorage.getItem('room')
 let UID = sessionStorage.getItem('UID')
@@ -23,10 +23,19 @@ let joinAndDisplayLocalStream = async () => {
         console.error(error)
         window.open('/', '_self')
     }
-    
-    localTracks = await AgoraRTC.createMicrophoneAndCameraTracks()
 
     let member = await createMember()
+    
+    try {
+    localTracks = await AgoraRTC.createMicrophoneAndCameraTracks()
+} catch (error) {
+    console.error("Device error:", error)
+
+    alert("No camera or microphone found. Running in view-only mode.")
+
+    // Fallback → join without tracks
+    localTracks = []
+}
 
     let player = `<div  class="video-container" id="user-container-${UID}">
                      <div class="video-player" id="user-${UID}"></div>
@@ -70,7 +79,10 @@ let handleUserJoined = async (user, mediaType) => {
 
 let handleUserLeft = async (user) => {
     delete remoteUsers[user.uid]
-    document.getElementById(`user-container-${user.uid}`).remove()
+    let player = document.getElementById(`user-container-${user.uid}`)
+    if (player != null){
+        player.remove()
+    }
 }
 
 let leaveAndRemoveLocalStream = async () => {
@@ -87,6 +99,9 @@ let leaveAndRemoveLocalStream = async () => {
 
 let toggleCamera = async (e) => {
     console.log('TOGGLE CAMERA TRIGGERED')
+    if (!localTracks[1]){
+        return
+    }
     if(localTracks[1].muted){
         await localTracks[1].setMuted(false)
         e.target.style.backgroundColor = '#fff'
@@ -98,6 +113,9 @@ let toggleCamera = async (e) => {
 
 let toggleMic = async (e) => {
     console.log('TOGGLE MIC TRIGGERED')
+    if (!localTracks[0]){
+        return
+    }
     if(localTracks[0].muted){
         await localTracks[0].setMuted(false)
         e.target.style.backgroundColor = '#fff'
